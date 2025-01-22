@@ -136,18 +136,32 @@ public class Game {
     }
 
     private void promptAndMovePiece(int diceRoll) {
-        System.out.println("Choose the piece to move (enter row and column): ");
-        int row = scanner.nextInt();
-        int col = scanner.nextInt();
-        scanner.nextLine();
+        while (true) {
+            System.out.println("Choose the piece to move (enter row and column): ");
+            int row = scanner.nextInt();
+            int col = scanner.nextInt();
+            scanner.nextLine();
 
+            String playerSymbol = currentPlayer == 0 ? "B" : "G";
+
+            if (state.getBoard()[row][col].contains(playerSymbol)) { 
+                movePiece(row, col, diceRoll);
+                break; // Exit the loop if a valid piece is selected
+            } else {
+                System.out.println("Invalid piece selection. Valid pieces are at: " + getValidPiecePositions());
+            }
+        }
+    }
+
+    private String getValidPiecePositions() {
+        StringBuilder validPositions = new StringBuilder();
         String playerSymbol = currentPlayer == 0 ? "B" : "G";
 
-        if (state.getBoard()[row][col].contains(playerSymbol)) { 
-            movePiece(row, col, diceRoll);
-        } else {
-            System.out.println("Invalid piece selection. Turn ends.");
+        for (String position : playerPieces.get(currentPlayer)) {
+            validPositions.append(position).append(" ");
         }
+
+        return validPositions.toString().trim();
     }
 
     private void movePiece(int row, int col, int diceRoll) {
