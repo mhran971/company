@@ -5,13 +5,14 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Game {
+ class Game {
     private State state;
     private int currentPlayer; 
     private Random dice;
     private Scanner scanner;
     private Set<String> allowedPositions; 
     private Map<Integer, Set<String>> playerPieces; 
+    private Set<String> skippedPositions; // To track skipped positions
 
     public Game() {
         state = new State();
@@ -22,6 +23,7 @@ public class Game {
         playerPieces = new HashMap<>();
         playerPieces.put(0, new HashSet<>()); 
         playerPieces.put(1, new HashSet<>()); 
+        skippedPositions = new HashSet<>(); // Initialize skipped positions
     }
 
     private void initializeAllowedPositions() {
@@ -164,11 +166,27 @@ public class Game {
         StringBuilder validPositions = new StringBuilder();
         String playerSymbol = currentPlayer == 0 ? "B" : "G";
 
+        // Logic to determine valid positions based on current game state
         for (String position : playerPieces.get(currentPlayer)) {
-            validPositions.append(position).append(" ");
+            // Check if the piece is out of the base and not skipped
+            if (isPieceOutOfBase(position) && !isPositionSkipped(position)) {
+                validPositions.append(position).append(" ");
+            }
         }
 
         return validPositions.toString().trim();
+    }
+
+    private boolean isPieceOutOfBase(String position) {
+        // Logic to check if the piece is out of the base
+        // Example: return !basePositions.contains(position);
+        // Implement the actual logic based on your game's rules
+        return true; // Placeholder return value
+    }
+
+    private boolean isPositionSkipped(String position) {
+        // Logic to check if the position has been skipped
+        return skippedPositions.contains(position); // Check against skipped positions
     }
 
     private void movePiece(int row, int col, int diceRoll) {
