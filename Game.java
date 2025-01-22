@@ -62,18 +62,21 @@ public class Game {
                 System.out.println("No pieces outside the base. A new piece will be brought out.");
                 movePieceToStart();
             } else {
-                System.out.println("You rolled a 6! You can move a piece or bring a new one out.");
-                System.out.println("Press 1 to bring a new piece out, or 2 to move an existing piece.");
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+                int choice;
+                do {
+                    System.out.println("You rolled a 6! You can move a piece or bring a new one out.");
+                    System.out.println("Press 1 to bring a new piece out, or 2 to move an existing piece.");
+                    choice = scanner.nextInt();
+                    scanner.nextLine();
 
-                if (choice == 1) {
-                    movePieceToStart();
-                } else if (choice == 2) {
-                    promptAndMovePiece(diceRoll);
-                } else {
-                    System.out.println("Invalid choice. Turn ends.");
-                }
+                    if (choice == 1) {
+                        movePieceToStart();
+                    } else if (choice == 2) {
+                        promptAndMovePiece(diceRoll);
+                    } else {
+                        System.out.println("Invalid choice. Please try again.");
+                    }
+                } while (choice != 1 && choice != 2);
             }
             System.out.println("Player " + (currentPlayer == 0 ? "Blue" : "Green") + " gets another turn!");
             printBoard();
@@ -144,11 +147,15 @@ public class Game {
 
             String playerSymbol = currentPlayer == 0 ? "B" : "G";
 
-            if (state.getBoard()[row][col].contains(playerSymbol)) { 
-                movePiece(row, col, diceRoll);
-                break; // Exit the loop if a valid piece is selected
+            if (row >= 0 && row < state.getBoard().length && col >= 0 && col < state.getBoard()[0].length) {
+                if (state.getBoard()[row][col].contains(playerSymbol)) { 
+                    movePiece(row, col, diceRoll);
+                    break; // Exit the loop if a valid piece is selected
+                } else {
+                    System.out.println("Invalid piece selection. Valid pieces are at: " + getValidPiecePositions());
+                }
             } else {
-                System.out.println("Invalid piece selection. Valid pieces are at: " + getValidPiecePositions());
+                System.out.println("Invalid input. Please enter valid row and column numbers.");
             }
         }
     }
